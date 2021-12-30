@@ -51,5 +51,5 @@ class CategoryDetails(Resource):
     @auth.login_required
     @permission_required([RoleEnum.admin])
     def delete(self, id_):
-        category = CategoryManager.delete(id_)
+        CategoryManager.delete(id_)
         return {"message": "Success"}, 204

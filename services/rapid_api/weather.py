@@ -1,5 +1,3 @@
-import json
-
 import requests
 from decouple import config
 
@@ -28,9 +26,7 @@ class CurrentWeatherService:
         resp = requests.request(
             "GET", url, headers=self.headers, params=self.querystring
         )
-        return json.loads(resp.text)["main"]
-
-    # {'temp': 0.97, 'feels_like': -2.41, 'temp_min': 0.97, 'temp_max': 0.97, 'pressure': 1015, 'humidity': 100}
+        return resp.text
 
 
 #
@@ -39,8 +35,8 @@ class CurrentWeatherService:
 #     resp = weather.get_weather()
 #     print(resp)
 
-"""
-{"coord":{"lon":24.6167,"lat":43.4167},
+"""  resp.text
+'{"coord":{"lon":24.6167,"lat":43.4167},
 "weather":[{"id":701,"main":"Mist","description":"mist","icon":"50n"}],
 "base":"stations",
 "main":{"temp":1.97,"feels_like":-0.23,"temp_min":1.97,"temp_max":1.97,"pressure":1014,"humidity":87},
@@ -54,6 +50,6 @@ class CurrentWeatherService:
 "timezone":7200,
 "id":728203,
 "name":"Pleven",
-"cod":200}
+"cod":200}'
 
 """

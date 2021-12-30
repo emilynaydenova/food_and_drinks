@@ -30,3 +30,4 @@ def validate_full_name(value):
         first_name, last_name = value.split()
     except:
         raise ValidationError("Full name should contain first and last name.")
+

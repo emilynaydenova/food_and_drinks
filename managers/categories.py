@@ -75,12 +75,14 @@ class CategoryManager:
     @staticmethod
     def delete(id_):
         category = find_category(id_)
+
+        # find all food and drinks to this category - ask to delete them first
         try:
             s3.delete_image(category.image_url)
             db.session.delete(category)
             db.session.commit()
-        except DatabaseError as e:
-            raise Exception("Can't delete this category")
+        except Exception as e:
+            raise BadRequest("Delete food and drinks items connected to this category first.")
         return category
 
     @staticmethod

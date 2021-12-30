@@ -45,9 +45,9 @@ class FoodAndDrinksDetails(Resource):
     @validate_schema(FoodAndDrinksRequestSchema)
     def put(self, id_):
         data = request.get_json()
-        edited_category = FoodAndDrinksManager.update(data, id_)
+        updated_food_and_drinks_item = FoodAndDrinksManager.update(data, id_)
         schema = FoodAndDrinksResponseSchema()
-        return schema.dump(edited_category)
+        return schema.dump(updated_food_and_drinks_item)
 
     # Delete
     @auth.login_required
