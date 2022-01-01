@@ -51,15 +51,16 @@ class CreateOrderManager:
         order_query = Order.query.filter_by(id=order.id)
         order = order_query.first()
         order.total_price = total_price
-        db.session.flush()
+        db.session.commit()
         return order, not_available
 
     @staticmethod
-    def get(id_):
+    def get(id_):  # by order_number????
         order_query = Order.query.filter_by(id=id_)
         order = order_query.first()
         if not order:
             raise NotFound("This order doesn't exist")
+
         user = auth.current_user()
         if not user.id == order.customer_id:
             raise NotFound("Customer doesn't have such order.")

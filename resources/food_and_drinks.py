@@ -35,9 +35,9 @@ class FoodAndDrinksDetails(Resource):
     @auth.login_required
     @permission_required([RoleEnum.staff, RoleEnum.admin])
     def get(self, id_):
-        category = FoodAndDrinksManager.get(id_)
+        food = FoodAndDrinksManager.get(id_)
         schema = FoodAndDrinksResponseSchema()
-        return schema.dump(category)
+        return schema.dump(food)
 
     # Update
     @auth.login_required

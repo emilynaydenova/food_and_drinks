@@ -20,7 +20,7 @@ class SignUpCustomer(Resource):
     def post(self):
         user = CustomerManager.signup(request.get_json())
         token = AuthTokenManager.encode_token(user)
-        return {"token": token}, status.HTTP_201_CREATED
+        return {"token": token}, 201
 
 
 # must return dictionary or list of dictionaries, so Flask could serialize it in get_json
@@ -32,7 +32,7 @@ class SignInCustomer(Resource):
     def post(self):
         user = CustomerManager.signin(request.get_json())
         token = AuthTokenManager.encode_token(user)
-        return {"token": token}, status.HTTP_200_OK
+        return {"token": token}, 200
 
     def put(self):
         pass

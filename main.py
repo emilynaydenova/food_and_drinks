@@ -1,30 +1,14 @@
-from flask import Flask
-from flask_migrate import Migrate
-from flask_restful import Api
-from werkzeug.exceptions import BadRequest
-
-from config import DevelopmentConfig
+from config import create_app
 from db import db
-from resources.routes import routes
 
-# this WSGI app is an instance of class Flask
-app = Flask(__name__)
+app = create_app()
 
-# configuring flask app and db connection string
-app.config.from_object(DevelopmentConfig)
 
-# initialize db
-db.init_app(app)
+@app.before_first_request
+def create_tables():
+    db.init_app(app)
+    db.create_all()
 
-# allow changing column type
-migrate = Migrate(compare_type=True)
-migrate.init_app(app, db)
-
-# api wraps app, makes it a Restful API
-api = Api(app)
-
-# Adding resources for endpoints in routes.py
-[api.add_resource(*r) for r in routes]
 
 #
 # @app.after_request

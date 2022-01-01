@@ -12,7 +12,7 @@ from utils.decorators import permission_required, validate_schema
 
 class CreateOrder(Resource):
     #
-    # # get_all_orders
+    # # get_all_orders by status (from ?query)
     # @auth.login_required
     # @permission_required([RoleEnum.staff,RoleEnum.admin])
     # def get(self):
@@ -37,6 +37,7 @@ class CreateOrder(Resource):
 
 
 class OrderDetails(Resource):
+    # customer can see only his orders with their status
     @auth.login_required
     @permission_required([RoleEnum.customer])
     def get(self, id_):  # get order
@@ -44,8 +45,8 @@ class OrderDetails(Resource):
         schema = OrderResponseSchema()
         return schema.dump(order), 200
 
+    @auth.login_required
+    @permission_required([RoleEnum.staff,RoleEnum.customer])
     def put(self, id_):  # update order - change status or change items
         pass
 
-    def delete(self, id_):  # delete order
-        pass

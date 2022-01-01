@@ -1,4 +1,3 @@
-from psycopg2 import DatabaseError
 from werkzeug.exceptions import BadRequest
 
 from db import db
@@ -19,10 +18,10 @@ def find_food_and_drinks_item(id_):
 # managers don't have state -> staticmethod
 class FoodAndDrinksManager:
 
-    # Read
+    # Read from staff and admins
     @staticmethod
     def get_all_food_and_drinks():
-        food_and_drinks = FoodAndDrinks.query.filter_by(is_available=True)
+        food_and_drinks = FoodAndDrinks.query.all()
         return food_and_drinks
 
     # Create
@@ -68,22 +67,27 @@ class FoodAndDrinksManager:
 
     @staticmethod
     def get_all_food_and_drinks_by_category(args):
+        args = {k.lower(): v.lower() for k, v in args.items()}
         if "category" not in args:
             return BadRequest("No query string with ?category received")
 
         category_value = args.get("category")
-        try:
-            category_name = CategoryEnum(category_value).name
-        except Exception as ex:
-            raise BadRequest(f"No such Category {category_value}.")
+
+        for k, v in CategoryEnum.__members__.items():
+            if k == category_value.lower():
+                category_name = v
+                break
+        else:
+            raise BadRequest("Not such category name.")
 
         category_found = Category.query.filter_by(title=category_name).first()
 
         if (not category_found) or (not category_found.is_active):
             raise BadRequest(f"No such active category.")
 
-        foods_query = FoodAndDrinks.query.filter_by(category_id=category_found.id)
-        foods = foods_query.all()
+        # show only available foods for this category
+        foods = FoodAndDrinks.query.filter_by(category_id=category_found.id, is_available=True)
+
         if not foods:
             raise BadRequest("No foods and drinks in this category.")
         return foods

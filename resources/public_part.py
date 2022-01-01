@@ -19,7 +19,7 @@ class PublicView(Resource):
             the path must include query ->  ?category='some enum value'
             The weather conditions at the local place are included in the response.
             """
-        args = request.args
+        args = dict(request.args)
         foods = FoodAndDrinksManager.get_all_food_and_drinks_by_category(args)  # list of objects
 
         schema = FoodAndDrinksResponseSchema()

@@ -59,7 +59,10 @@ def verify_token(token):
         user_id, model_ = AuthTokenManager.decode_token(token)
         return eval(f"{model_}.query.filter_by(id={user_id}).first()")
         #  returns founded user in dB (with the extracted user.id)
-    except ExpiredSignatureError:
-        raise BadRequest("Token expired. Please log in again.")
+
     except Exception as ex:
-        raise Unauthorized("Invalid token. Please log in again.")
+        """
+        invalid_token The access token provided is expired,
+         revoked, malformed, or invalid for other reasons. 
+        """
+        raise Unauthorized("Invalid or missing token. Please log in again.")

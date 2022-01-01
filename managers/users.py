@@ -19,7 +19,7 @@ class CustomerManager:
         customer = Customer(**data)  # new instance of Customer
         # Todo: try - except for UniqueViolationError
         db.session.add(customer)
-        db.session.flush()
+        db.session.commit()
         return customer
 
     @staticmethod
@@ -58,7 +58,7 @@ class StaffManager:
         staff = Staff(**data)
         # Todo: try - except for UniqueViolationError
         db.session.add(staff)
-        db.session.flush()
+        db.session.commit()
         return staff
 
     @staticmethod
@@ -82,7 +82,7 @@ class AdminManager:
         admin = Admin(**data)
         # Todo: try - except for UniqueViolationError
         db.session.add(admin)
-        db.session.flush()
+        db.session.commit()
         return admin
 
     @staticmethod
@@ -99,6 +99,17 @@ class AdminManager:
             raise Exception
         except Exception:
             raise BadRequest("Invalid email or password")
+
+
+    def update_staff(self,id_):
+        pass
+
+    def update_admin(self,id_):
+        pass
+
+    def update_customer(self,_id):
+        pass
+
 
 
 # !!! Extending Schemas

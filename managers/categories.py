@@ -14,12 +14,17 @@ s3 = S3Service()
 
 
 def s3_image_upload(data):
+
     # set a random image's file name - to upload in S3
     image_file_name = f'{str(uuid.uuid4())}.{data.pop("image_extension")}'
     path = os.path.join(TEMP_FILE_FOLDER, image_file_name)
     decode_image(path, data.pop("image"))
-    data["image_url"] = s3.upload_image(path, image_file_name)
-    os.remove(path)
+    try:
+        data["image_url"] = s3.upload_image(path, image_file_name)
+    except Exception as ex:
+        raise BadRequest("Provider error uploading image")
+    finally:
+        os.remove(path)
     return data
 
 
