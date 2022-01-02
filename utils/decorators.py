@@ -28,7 +28,7 @@ def permission_required(permissions):
                 auth.current_user()
             )  # current user is returned from verify_token founded in db
             if user.role not in permissions:
-                raise Forbidden("You don't have access to this resource")  # 403
+                raise Forbidden("You don't have access to this resource.")  # 403
             return func(*args, **kwargs)
 
         return decorated_func

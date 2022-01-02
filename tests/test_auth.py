@@ -5,8 +5,8 @@ from flask_testing import TestCase
 
 from config import create_app
 from db import db
-from tests.base import generate_token
 from tests.factories import AdminFactory
+from tests.helpers import generate_token
 
 
 class TestAuthenticationAuthorization(TestCase):
@@ -65,9 +65,11 @@ class TestAuthenticationAuthorization(TestCase):
             assert resp.json == {"message": "Invalid or missing token. Please log in again."}
 
     def test_authorization_endpoints_admin_access_raises(self):
-        # Create complainer, create token for it and test all
-        # ADMIN endpoints with complainer token -
-        # they should return
+        # tests    @permission_required([RoleEnum.admin])
+
+        # Create Admin, create token for it and test all
+        # Admin endpoints if they have permission for this resource
+      
         url_methods = [
             ("/admin/create-staff", "POST"),
             ("/admin/create-admin", "POST"),
@@ -84,25 +86,22 @@ class TestAuthenticationAuthorization(TestCase):
             ("/orders/food-and-drinks/1", "DELETE"),
         ]
 
+        admin = AdminFactory()
+        token = generate_token(admin)
+        headers = {"Authorization": f"Bearer {token}"}
+
         for url, method in url_methods:
             if method == "GET":
-                resp = self.client.get(url)
-            elif method == "POST":
-                resp = self.client.post(url, data=json.dumps({}))
-            elif method == "PUT":
-                resp = self.client.put(url, data=json.dumps({}))
-            elif method == "DELETE":
-                resp = self.client.delete(url)
-
-            admin = AdminFactory()
-            token = generate_token(admin)
-            headers = {"Authorization": f"Bearer {token}"}
-            if method == "POST":
-                resp = self.client.post(url, data=json.dumps({}), headers=headers)
+                resp = self.client.get(url, headers=headers)
             elif method == "DELETE":
                 resp = self.client.delete(url, headers=headers)
-            expected_message = {'message': 'You do not have the rights to access this resource'}
-            self.assert_403(resp, expected_message)
+            elif method == "POST":
+                resp = self.client.post(url, data=json.dumps({}), headers=headers)
+            elif method == "PUT":
+                resp = self.client.put(url, data=json.dumps({}), headers=headers)
+
+            assert resp.status_code != 403  # # if not permission -> 403 -> Forbidden
+            assert resp.json != {"message": "You don't have access to this resource."}
 
     def test_first_admin_creation(self):
         pass
