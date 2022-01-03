@@ -100,16 +100,14 @@ class AdminManager:
         except Exception:
             raise BadRequest("Invalid email or password")
 
-
-    def update_staff(self,id_):
+    def update_staff(self, id_):
         pass
 
-    def update_admin(self,id_):
+    def update_admin(self, id_):
         pass
 
-    def update_customer(self,_id):
+    def update_customer(self, _id):
         pass
-
 
 
 # !!! Extending Schemas

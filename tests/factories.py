@@ -21,7 +21,7 @@ class AdminFactory(BaseFactory):
     class Meta:
         model = Admin
 
-    id = factory.Sequence(lambda n: n+1)
+    id = factory.Sequence(lambda n: n + 1)
     full_name = factory.Faker("name")
     email = factory.Faker("email")
     phone = str(randint(1000000000, 2000000000))
@@ -34,7 +34,7 @@ class CustomerFactory(BaseFactory):
     class Meta:
         model = Customer
 
-    id = factory.Sequence(lambda n: n+1)
+    id = factory.Sequence(lambda n: n + 1)
     full_name = factory.Faker("name")
     email = factory.Faker("email")
     phone = str(randint(1000000000, 2000000000))
@@ -47,7 +47,7 @@ class StaffFactory(BaseFactory):
     class Meta:
         model = Staff
 
-    id = factory.Sequence(lambda n: n+1)
+    id = factory.Sequence(lambda n: n + 1)
     full_name = factory.Faker("name")
     email = factory.Faker("email")
     phone = str(randint(1000000000, 2000000000))

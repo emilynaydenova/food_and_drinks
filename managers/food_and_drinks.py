@@ -86,7 +86,9 @@ class FoodAndDrinksManager:
             raise BadRequest(f"No such active category.")
 
         # show only available foods for this category
-        foods = FoodAndDrinks.query.filter_by(category_id=category_found.id, is_available=True)
+        foods = FoodAndDrinks.query.filter_by(
+            category_id=category_found.id, is_available=True
+        )
 
         if not foods:
             raise BadRequest("No foods and drinks in this category.")

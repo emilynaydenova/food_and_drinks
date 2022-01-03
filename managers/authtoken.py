@@ -63,6 +63,6 @@ def verify_token(token):
     except Exception as ex:
         """
         invalid_token The access token provided is expired,
-         revoked, malformed, or invalid for other reasons. 
+         revoked, malformed, or invalid for other reasons.
         """
         raise Unauthorized("Invalid or missing token. Please log in again.")

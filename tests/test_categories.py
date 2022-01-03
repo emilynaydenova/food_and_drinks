@@ -43,7 +43,7 @@ class TestCategories(TestCase):
             "title": CategoryEnum.salad.value,
             "image": encoded_image,
             "image_extension": "png",
-            "is_active": True
+            "is_active": True,
         }
         admin = AdminFactory()
         token = generate_token(admin)
@@ -74,3 +74,69 @@ class TestCategories(TestCase):
         image_name = f"{mock_uuid()}.{extension}"
         path = os.path.join(TEMP_FILE_FOLDER, image_name)
         s3_mock.assert_called_once_with(path, image_name)
+
+    def test_create_category_invalid_input_fields_raises(self):
+        """
+        Test if a required field is not provided
+        """
+
+        url = "/orders/categories"
+        data = {
+            "title": CategoryEnum.salad.value,
+            "image": encoded_image,
+            "image_extension": "png",
+            "is_active": True,
+        }
+        admin = AdminFactory()
+        token = generate_token(admin)
+        self.headers.update({"Authorization": f"Bearer {token}"})
+
+        categories = Category.query.all()
+        assert len(categories) == 0
+
+        for key in data:
+            copy_data = data.copy()
+            copy_data.pop(key)
+            resp = self.client.post(
+                url, data=json.dumps(copy_data), headers=self.headers
+            )
+
+            message = resp.json["message"]
+            expected_message = f"Invalid data fields - {key}"
+
+            assert resp.status_code == 400
+            assert message == expected_message
+
+        categories = Category.query.all()
+        assert len(categories) == 0
+
+    def test_create_category_invalid_title_field_raises(self):
+        """
+        Test if a title field is not from CategoryEnum
+        """
+
+        url = "/orders/categories"
+        data = {
+            "title": "Test",
+            "image": encoded_image,
+            "image_extension": "png",
+            "is_active": True,
+        }
+
+        admin = AdminFactory()
+        token = generate_token(admin)
+        self.headers.update({"Authorization": f"Bearer {token}"})
+
+        categories = Category.query.all()
+        assert len(categories) == 0
+
+        resp = self.client.post(url, data=json.dumps(data), headers=self.headers)
+
+        message = resp.json["message"]
+        expected_message = f"No such category name."
+
+        assert resp.status_code == 400
+        assert message == expected_message
+
+        categories = Category.query.all()
+        assert len(categories) == 0

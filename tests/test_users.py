@@ -8,7 +8,6 @@ from models import Customer, RoleEnum
 
 
 class TestUsers(TestCase):
-
     def create_app(self):
         # Create Flask app with test configuration .
         self.headers = {"Content-Type": "application/json"}
@@ -36,7 +35,6 @@ class TestUsers(TestCase):
             "email": "test@test.com",
             "password": "J@2345678",
             "full_name": "Test User",
-
         }
 
         customers = Customer.query.all()
@@ -54,11 +52,39 @@ class TestUsers(TestCase):
 
         customer = Customer.query.filter_by(id=1).first()
 
-        customer_created = {"id": customer.id, "email": customer.email, "full_name": customer.full_name,
-                            "role": RoleEnum.customer}
+        customer_created = {
+            "id": customer.id,
+            "email": customer.email,
+            "full_name": customer.full_name,
+            "role": RoleEnum.customer,
+        }
         data.pop("password")
         assert customer_created == {
             "id": 1,
             "role": RoleEnum.customer,
             **data,
         }
+
+    def test_user_already_exists_raises(self):
+        url = "/users/customers/signup"
+
+        data = {
+            "email": "test@test.com",
+            "password": "J@2345678",
+            "full_name": "Test User",
+        }
+
+        customers = Customer.query.all()
+        assert len(customers) == 0
+
+        # Act
+        resp = self.client.post(url, data=json.dumps(data), headers=self.headers)
+
+        # assert if customer is created
+        assert resp.status_code == 201
+
+        # Make the same request but user already exists
+        resp = self.client.post(url, data=json.dumps(data), headers=self.headers)
+
+        assert resp.status_code == 400
+        assert resp.json == {"message": "User with this email already exists"}

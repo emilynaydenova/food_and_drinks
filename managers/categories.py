@@ -87,7 +87,9 @@ class CategoryManager:
             db.session.delete(category)
             db.session.commit()
         except Exception as e:
-            raise BadRequest("Delete food and drinks items connected to this category first.")
+            raise BadRequest(
+                "Delete food and drinks items connected to this category first."
+            )
         return category
 
     @staticmethod
