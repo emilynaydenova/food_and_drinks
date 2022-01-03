@@ -10,7 +10,7 @@ from services.rapid_api.weather import CurrentWeatherService
 weather = CurrentWeatherService()
 
 
-class PublicView(Resource):
+class HomeView(Resource):
 
     @staticmethod
     def get():

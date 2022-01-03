@@ -4,11 +4,11 @@ from resources.auth import SignUpCustomer, SignInCustomer, SignInAdmin, SignInSt
 from resources.categories import CreateCategory, CategoryDetails
 from resources.food_and_drinks import CreateFoodAndDrinks, FoodAndDrinksDetails
 from resources.orders import CreateOrder, OrderDetails
-from resources.public_part import PublicView
+from resources.home_page import HomeView
 
 routes = (
     # to get all food_and_drinks by category
-    (PublicView, "/all"),  # (?category=some-Enum-value)
+    (HomeView, "/all"),  # (?category=some-Enum-value)
 
     # public endpoints
     (SignUpCustomer, "/users/customers/signup"),
