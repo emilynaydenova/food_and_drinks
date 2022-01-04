@@ -9,7 +9,6 @@ from schemas.response.food_and_drinks import FoodAndDrinksResponseSchema
 from utils.decorators import permission_required, validate_schema
 
 
-# '/orders/food-and-drinks'
 class CreateFoodAndDrinks(Resource):
     # all food and drinks
     @auth.login_required
@@ -30,7 +29,6 @@ class CreateFoodAndDrinks(Resource):
         return schema.dump(food_and_drinks), 201
 
 
-# /orders/food-and-drinks/<int:id>'
 class FoodAndDrinksDetails(Resource):
     @auth.login_required
     @permission_required([RoleEnum.staff, RoleEnum.admin])

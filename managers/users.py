@@ -63,12 +63,13 @@ class StaffManager:
 
     @staticmethod
     def signin(data):
-        staff = Staff.query.filter_by(email=data["email"]).first()
-        if staff and check_password_hash(staff.password, data["password"]):
-            return staff
-        else:
+        try:
+            staff = Staff.query.filter_by(email=data["email"]).first()
+            if staff and check_password_hash(staff.password, data["password"]):
+                return AuthTokenManager.encode_token(staff)
+            raise Exception
+        except Exception:
             raise BadRequest("Invalid email or password")
-
 
 class AdminManager:
     @staticmethod

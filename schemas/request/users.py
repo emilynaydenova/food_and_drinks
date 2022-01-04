@@ -41,3 +41,7 @@ class CreateAdminSchema(BaseUserSchema):
 
 class SignInAdminSchema(BaseUserSchema):
     pass
+
+
+class SignInStaffSchema(BaseUserSchema):
+    pass

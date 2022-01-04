@@ -3,7 +3,7 @@ from resources.admin import CreateStaff, CreateFirstAdmin, CreateAdmin
 from resources.auth import SignUpCustomer, SignInCustomer, SignInAdmin, SignInStaff
 from resources.categories import CreateCategory, CategoryDetails
 from resources.food_and_drinks import CreateFoodAndDrinks, FoodAndDrinksDetails
-from resources.orders import CreateOrder, OrderDetails
+from resources.orders import CreateOrder, OrderDetails, OrderApprovement
 from resources.home_page import HomeView
 
 routes = (
@@ -29,5 +29,6 @@ routes = (
     (FoodAndDrinksDetails, "/orders/food-and-drinks/<int:id_>"),
 
     (CreateOrder, "/orders/customers/order"),  # orders.py   - by customer
-    (OrderDetails, "/orders/details/<int:id_>",),  # orders.py -> update,delete,view  approve,reject
+    (OrderDetails, "/orders/details/<int:id_>",),  # orders.py -> update,view
+    (OrderApprovement,"/orders/approvement/<int:id_>"),  # approved,rejected,delivered
 )

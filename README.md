@@ -1,11 +1,11 @@
 # Food and Drinks
 **Flask RESTful SoftUni student project** <br/>
 
-This project can be used as a flask-driven restful API backend for restaurants,<br>
+This project can be used as a flask-driven restful API backend for restaurants 
 delivering food and drinks.<br/>
-This is not an original idea, but can be MVPed in the future for an application,<br>
-helping a friend of mine to deliver customer orders.<br>
-My base idea comes from  (https://food-ordering.app/), which backend is written in Go.<br>
+This is not an original idea, but can be MVPed in the future for an application,<br/>
+helping a friend of mine to deliver customer orders. <br/>
+My base idea comes from [Food Ordering app](https://food-ordering.app/), which backend is written in Go.<br>
 My project is created by me thanks to Ines Ivanova's lectures "Web Applications with Flask"<br>
 and there are scripts very similar to those shown in the videos.
 
@@ -24,14 +24,28 @@ Minor dependencies can be found in the **requirements.txt** file on the root fol
 **AWS S3 service** - cloud storage service.<br/>
 **Open Weather Map API** - can get weather data in any location on the earth.<br/>
 
+**Short description of application usage:** 
+
+At the first stage, admins and staff members user accounts are created by an admin.<br/>
+Admin also creates some categories of food and drinks (there are 5 possible choices).<br/>
+Admin or staff member add food and drinks items by category. These items can be defined <br/>
+as available or not available at any moment.<br/>
+
+Customer can view all offered items and after registration or login, can place an order.<br/>
+Staff member can approve order, reject order or mark it as delivered.<br/>
+
+At a later stage, application may track delivering and send emails to the customer account<br/>
+with their order status.<br/>
 
 **RESTful endpoints**
 
 _**_Home page_**_
 
-| Endpoint            | HTTP<br/> Method | Result                                                | 
-|---------------------|------------------|-------------------------------------------------------|
-| /all?category="..." | GET              | shows all available food and drinks items by category |
+| Endpoint            | HTTP<br/> Method | Result                                                                                                    | 
+|---------------------|------------------|-----------------------------------------------------------------------------------------------------------|
+| /all?category="..." | GET              | shows all available food and drinks items by category<br/>and the weather data for the restaurant's place |
+
+
 
 *... there are predefined types of categories in /models/enums.py<br/>
 
@@ -87,12 +101,12 @@ _Endpoints implementation can be found under_: <br/>
 
 _**_Orders creation and management_**_
 
-| Endpoint                  | HTTP<br/>Method | Result              | Authorization |
-|---------------------------|-----------------|---------------------|---------------|
-| /orders/customers/order   | POST            | Create an order     | customer      |
-| /orders/customers/order   | GET             | View all orders     | staff         |
-| /orders/details/<int:id_> | GET             | View their order    | customer      |
-| /orders/details/<int:id_> | PUT             | Update order status | staff         |
+| Endpoint                      | HTTP<br/>Method | Result              | Authorization |
+|-------------------------------|-----------------|---------------------|---------------|
+| /orders/customers/order       | POST            | Create an order     | customer      |
+| /orders/customers/order       | GET             | View all orders     | staff         |
+| /orders/details/<int:id_>     | GET             | View their order    | customer      |
+| /orders/approvement/<int:id_> | PUT             | Update order status | staff         |
 
 _Endpoints implementation can be found under_: <br/>
  * /resources/orders.py <br/> 

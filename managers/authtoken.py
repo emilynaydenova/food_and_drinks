@@ -8,7 +8,7 @@ from jwt import encode, decode, ExpiredSignatureError  # install pyJWT
 from werkzeug.exceptions import Unauthorized, BadRequest
 
 # Keep this imports because of the eval function
-from models.users import Customer, Admin
+from models.users import Customer, Admin, Staff
 
 
 # for SignUp,SignIn -> token = AuthTokenManager.encode_token(user)

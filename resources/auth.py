@@ -5,11 +5,11 @@ from flask_api import status
 from flask_restful import Resource
 
 from managers.authtoken import AuthTokenManager
-from managers.users import CustomerManager, AdminManager
+from managers.users import CustomerManager, AdminManager, StaffManager
 from schemas.request.users import (
     SignUpCustomerRequestSchema,
     SignInAdminSchema,
-    SignInCustomerRequestSchema,
+    SignInCustomerRequestSchema, SignInStaffSchema,
 )
 from utils.decorators import validate_schema
 
@@ -41,7 +41,11 @@ class SignInCustomer(Resource):
 
 
 class SignInStaff(Resource):
-    pass
+    @validate_schema(SignInStaffSchema)
+    def post(self):
+        data = request.get_json()
+        token = StaffManager.signin(data)
+        return {"token": token}, status.HTTP_200_OK
 
     def put(self):
         pass
