@@ -31,7 +31,6 @@ class CreateOrder(Resource):
     @validate_schema(OrderRequestSchema)
     def post(self):
         data = request.get_json()
-
         order, not_available = CreateOrderManager.create(data)
         if not_available:
             message = f'There are unavailable food or drinks: {",".join(not_available)}'
@@ -52,18 +51,19 @@ class OrderDetails(Resource):
     @auth.login_required
     @permission_required([RoleEnum.customer])
     @validate_schema(OrderRequestSchema)
-    def put(self,id_):
+    def put(self, id_):
         """
         change order's items while status is still "pending"
         """
         data = request.get_json()
 
-        order, not_available = CreateOrderManager.update(data,id_)
+        order, not_available = CreateOrderManager.update(data, id_)
         if not_available:
             message = f'There are unavailable food or drinks: {",".join(not_available)}'
             raise BadRequest(message)
         schema = OrderResponseSchema()
         return schema.dump(order), 201
+
 
 class OrderApprovement(Resource):
     @auth.login_required

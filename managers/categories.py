@@ -1,7 +1,6 @@
 import os
 import uuid
 
-from psycopg2 import DatabaseError
 from werkzeug.exceptions import BadRequest
 
 from constants import TEMP_FILE_FOLDER

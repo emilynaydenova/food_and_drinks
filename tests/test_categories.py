@@ -20,17 +20,14 @@ class TestCategories(TestCase):
     """
 
     def create_app(self):
-        # Create Flask app with test configuration .
         self.headers = {"Content-Type": "application/json"}
         return create_app("config.TestApplicationConfig")
 
     def setUp(self):
-        # before test
         db.init_app(self.app)
         db.create_all()
 
     def tearDown(self):
-        # after test
         db.session.remove()
         db.drop_all()
 

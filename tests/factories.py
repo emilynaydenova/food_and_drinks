@@ -1,10 +1,12 @@
-from db import db
 from random import randint
 
 import factory  # from factory_boy
 
+from db import db
+from models.categories import Category
+from models.food_and_drinks import FoodAndDrinks
+from models.enums import RoleEnum, CategoryEnum
 from models.users import Admin, Customer, Staff
-from models.enums import RoleEnum
 
 
 class BaseFactory(factory.Factory):
@@ -53,4 +55,40 @@ class StaffFactory(BaseFactory):
     phone = str(randint(1000000000, 2000000000))
     password = factory.Faker("password")
     is_active = True
-    role = RoleEnum.customer
+    role = RoleEnum.staff
+
+
+class CategoryFactory(BaseFactory):
+    class Meta:
+        model = Category
+
+    id = 1
+    title = CategoryEnum.salad
+    image_url = "category-test.url"
+    is_active = True
+
+
+class FoodAndDrinksFactory(BaseFactory):
+    class Meta:
+        model = FoodAndDrinks
+
+    id = 1
+    title = "Test title 1"
+    description = "Some description"
+    image_url = "food-and-drinks.url"
+    price = 10.05
+    category_id = 1
+    is_available = True
+
+
+class FoodAndDrinksFactorySecond(BaseFactory):
+    class Meta:
+        model = FoodAndDrinks
+
+    id = 2
+    title = "Test title 2"
+    description = "Some description"
+    image_url = "food-and-drinks.url"
+    price = 10.05
+    category_id = 1
+    is_available = True

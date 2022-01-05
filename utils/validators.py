@@ -24,10 +24,3 @@ def validate_password(value):
     if errors:
         raise ValidationError(f"Not a valid password")
 
-
-def validate_full_name(value):
-    try:
-        first_name, last_name = value.split()
-    except:
-        raise ValidationError("Full name should contain first and last name.")
-

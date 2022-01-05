@@ -31,21 +31,6 @@ class CustomerManager:
             raise BadRequest("Invalid email or password")
 
 
-#  """
-#      Checks the email and password (hashes the plain password)
-#      :param data: dict -> email, password
-#      :return: token
-# """
-#      try:
-#          customer = Customer.query.filter_by(email=data["email"]).first()
-# #         if customer and check_password_hash(customer.password, data["password"]):
-#          if customer and customer.verify_password(data["password"]):
-#              return AuthTokenManager.encode_token(customer)  # token
-#          raise Exception
-#      except Exception:
-#          raise BadRequest("Invalid username or password")
-
-
 class StaffManager:
     @staticmethod
     def create(data):
@@ -101,28 +86,4 @@ class AdminManager:
         except Exception:
             raise BadRequest("Invalid email or password")
 
-    def update_staff(self, id_):
-        pass
 
-    def update_admin(self, id_):
-        pass
-
-    def update_customer(self, _id):
-        pass
-
-
-# !!! Extending Schemas
-# https://marshmallow.readthedocs.io/en/stable/extending.html
-
-"""
-validating unique values
-https://github.com/marshmallow-code/marshmallow/issues/541
-"""
-
-"""
-        # hashing -> from werkzeug
-        Hash a password with the given method and 
-        salt with a string of the given length
-        produces salt string with length ... 
-        method$salt$hash
-    """

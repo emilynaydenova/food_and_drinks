@@ -76,6 +76,7 @@ class CreateOrderManager:
         order = order_query.first()
         order.total_price = total_price
         db.session.commit()
+        order.items = Items.query.filter_by(order_id=order.id).all()
         return order, not_available
 
     @staticmethod
@@ -120,6 +121,7 @@ class CreateOrderManager:
         order = find_order(id_)
         order.total_price = total_price
         db.session.commit()
+        order.items = Items.query.filter_by(order_id=order.id).all()
         return order, not_available
 
     @staticmethod
@@ -132,6 +134,7 @@ class CreateOrderManager:
         user = auth.current_user()
         if not user.id == order.customer_id:
             raise NotFound("Customer doesn't have such order.")
+        order.items = Items.query.filter_by(order_id=order.id).all()
         return order
 
 
@@ -155,4 +158,5 @@ class ApprovementOrderManager:
         else:
             raise BadRequest("Order's status can't be changed.")
         order = find_order(id_)
+        order.items = Items.query.filter_by(order_id=order.id).all()
         return order

@@ -2,7 +2,7 @@
 
 from marshmallow import Schema, fields, validate
 
-from utils.validators import validate_password, validate_full_name
+from utils.validators import validate_password
 
 
 class BaseUserSchema(Schema):
@@ -17,7 +17,7 @@ class BaseUserSchema(Schema):
 class SignUpCustomerRequestSchema(BaseUserSchema):
     full_name = fields.String(
         required=True,
-        validate=validate.And(validate_full_name, validate.Length(min=2, max=255)),
+        validate=validate.Length(min=2, max=255),
     )
 
 
@@ -28,14 +28,14 @@ class SignInCustomerRequestSchema(BaseUserSchema):
 class CreateStaffSchema(BaseUserSchema):
     full_name = fields.String(
         required=True,
-        validate=validate.And(validate_full_name, validate.Length(min=2, max=255)),
+        validate=validate.Length(min=2, max=255),
     )
 
 
 class CreateAdminSchema(BaseUserSchema):
     full_name = fields.String(
         required=True,
-        validate=validate.And(validate_full_name, validate.Length(min=2, max=255)),
+        validate=validate.Length(min=2, max=255),
     )
 
 

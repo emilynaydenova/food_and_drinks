@@ -1,28 +1,23 @@
 from datetime import datetime, timedelta
 
-from decouple import config  # install python-decouple
-
-# Basic and Digest HTTP authentication for Flask routes
+from decouple import config
 from flask_httpauth import HTTPTokenAuth
-from jwt import encode, decode, ExpiredSignatureError  # install pyJWT
-from werkzeug.exceptions import Unauthorized, BadRequest
+from jwt import encode, decode
+from werkzeug.exceptions import Unauthorized
 
-# Keep this imports because of the eval function
+
+""" Keep this imports because of the eval function
+    from models.users import Customer, Admin, Staff
+"""
 from models.users import Customer, Admin, Staff
 
-
-# for SignUp,SignIn -> token = AuthTokenManager.encode_token(user)
-# for Orders ->  @auth.login_required
 class AuthTokenManager:
     @staticmethod
     def encode_token(user):
         payload = {
             "sub": user.id,
-            "exp": datetime.utcnow()
-            + timedelta(
-                days=100
-            ),  # timedelta different for dev and production - JWT_DAYS
-            "user_model": user.__class__.__name__,  # model name
+            "exp": datetime.utcnow() + timedelta(days=100),
+            "user_model": user.__class__.__name__,
         }
         return encode(payload, key=config("JWT_SECRET_KEY"), algorithm="HS256")
 
@@ -37,32 +32,22 @@ class AuthTokenManager:
             raise ex
 
 
-# ---------- Authentication --------------------
-
-# Bearer authentication (also called token authentication) is
-# an HTTP authentication scheme that involves security tokens called bearer tokens.
-
-
+# Bearer authentication object token
 auth = HTTPTokenAuth(scheme="Bearer")
 
 
-# The client must send this token in the Authorization header
-# when making requests to protected resources:
-# https://learning.postman.com/docs/sending-requests/authorization/#bearer-token
-
-
-# redefine HTTPTokenAuth method verify_token
-# extend the token authentication against our custom implementation
 @auth.verify_token
 def verify_token(token):
+    """
+     redefine HTTPTokenAuth method verify_token, so extend
+     the token authentication against our custom implementation;
+     if the token is valid:
+         returns founded user in dB with the extracted user.id
+     Raises error if the token is invalid - is expired,revoked, malformed,
+         or invalid for other reasons.
+    """
     try:
         user_id, model_ = AuthTokenManager.decode_token(token)
         return eval(f"{model_}.query.filter_by(id={user_id}).first()")
-        #  returns founded user in dB (with the extracted user.id)
-
     except Exception as ex:
-        """
-        invalid_token The access token provided is expired,
-         revoked, malformed, or invalid for other reasons.
-        """
         raise Unauthorized("Invalid or missing token. Please log in again.")

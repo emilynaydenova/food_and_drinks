@@ -1,11 +1,11 @@
-#  inherits unittest.TestCase
 import json
 
+#  inherits unittest.TestCase
 from flask_testing import TestCase
 
 from config import create_app
 from db import db
-from tests.factories import AdminFactory
+from tests.factories import AdminFactory, CustomerFactory, StaffFactory
 from tests.helpers import generate_token
 
 
@@ -15,19 +15,16 @@ class TestAuthenticationAuthorization(TestCase):
         return create_app("config.TestApplicationConfig")
 
     def setUp(self):
-        # before test
         db.init_app(self.app)
         db.create_all()
 
     def tearDown(self):
-        # after test
         db.session.remove()
         db.drop_all()
 
     def test_authentication_missing_auth_header_raises(self):
-        # tests    @auth.login_required
+        # tests decorator @auth.login_required
 
-        # Arrange
         url_methods = [
             ("/orders/categories", "GET"),
             ("/orders/categories", "POST"),
@@ -40,11 +37,11 @@ class TestAuthenticationAuthorization(TestCase):
             ("/orders/customers/order", "POST"),
             ("/orders/details/1", "GET"),
             ("/orders/details/1", "PUT"),
+            ("/orders/approvement/1", "PUT"),
             ("/admin/create-staff", "POST"),
             ("/admin/create-admin", "POST"),
         ]
 
-        # Act
         for url, method in url_methods:
             if method == "GET":
                 resp = self.client.get(url)
@@ -55,14 +52,13 @@ class TestAuthenticationAuthorization(TestCase):
             elif method == "DELETE":
                 resp = self.client.delete(url)
 
-            # Assert
             assert resp.status_code == 401  # Unauthorized,expired
             assert resp.json == {
                 "message": "Invalid or missing token. Please log in again."
             }
 
     def test_authorization_endpoints_admin_access_raises(self):
-        # tests    @permission_required([RoleEnum.admin])
+        # tests decorator @permission_required([RoleEnum.admin])
 
         # Create Admin, create token for it and test all
         # Admin endpoints if they have permission for this resource
@@ -95,11 +91,52 @@ class TestAuthenticationAuthorization(TestCase):
             elif method == "PUT":
                 resp = self.client.put(url, data=json.dumps({}), headers=headers)
 
-            assert resp.status_code != 403  # # if not permission -> 403 -> Forbidden
+            assert resp.status_code != 403  # if not permission -> 403 -> Forbidden
             assert resp.json != {"message": "You don't have access to this resource."}
 
-    def test_first_admin_creation(self):
-        pass
+    def test_if_only_customer_can_create_an_order(self):
+        # tests decorator @permission_required([RoleEnum.customer])
+        url_methods = [
+            ("/orders/customers/order", "POST"),
+            ("/orders/details/1", "PUT"),
+        ]
 
-    def test_admin_cant_create_order(self):
-        pass
+        admin = AdminFactory()
+        token = generate_token(admin)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        for url, method in url_methods:
+            if method == "POST":
+                resp = self.client.post(url, data=json.dumps({}), headers=headers)
+            elif method == "PUT":
+                resp = self.client.put(url, data=json.dumps({}), headers=headers)
+
+            assert resp.status_code == 403
+            assert resp.json == {"message": "You don't have access to this resource."}
+
+        staff = StaffFactory()
+        token = generate_token(staff)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        for url, method in url_methods:
+            if method == "POST":
+                resp = self.client.post(url, data=json.dumps({}), headers=headers)
+            elif method == "PUT":
+                resp = self.client.put(url, data=json.dumps({}), headers=headers)
+
+            assert resp.status_code == 403
+            assert resp.json == {"message": "You don't have access to this resource."}
+
+        customer = CustomerFactory()
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        for url, method in url_methods:
+            if method == "POST":
+                resp = self.client.post(url, data=json.dumps({}), headers=headers)
+            elif method == "PUT":
+                resp = self.client.put(url, data=json.dumps({}), headers=headers)
+
+        assert resp.status_code != 403
+        assert resp.json != {"message": "You don't have access to this resource."}
+

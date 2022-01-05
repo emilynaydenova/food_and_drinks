@@ -14,7 +14,6 @@ from schemas.request.users import (
 from utils.decorators import validate_schema
 
 
-# (SignUpCustomer, "/users/customers/signup")
 class SignUpCustomer(Resource):
     @validate_schema(SignUpCustomerRequestSchema)
     def post(self):
@@ -23,10 +22,6 @@ class SignUpCustomer(Resource):
         return {"token": token}, 201
 
 
-# must return dictionary or list of dictionaries, so Flask could serialize it in get_json
-
-
-#  (SignInCustomer, "/users/customers/signin")
 class SignInCustomer(Resource):
     @validate_schema(SignInCustomerRequestSchema)
     def post(self):
@@ -53,7 +48,6 @@ class SignInStaff(Resource):
     # change password,address,phone
 
 
-# (SignInAdmin, '/users/admin/signin')
 class SignInAdmin(Resource):
     @validate_schema(SignInAdminSchema)
     def post(self):
@@ -64,7 +58,7 @@ class SignInAdmin(Resource):
     def put(self):
         pass
 
-    # change password if not super admin
+    # change password if not first admin
 
 
 class HelloWorld(Resource):
@@ -72,11 +66,3 @@ class HelloWorld(Resource):
     def get():
         return {"hello": "world"}
 
-
-# https://restfulapi.net/http-methods/
-
-#
-# class CreateGuest(Resource):
-#     @validate_schema(GuestRequestSchema)
-#     def post(self):
-#         pass
