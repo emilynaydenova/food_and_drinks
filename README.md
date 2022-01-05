@@ -101,12 +101,13 @@ _Endpoints implementation can be found under_: <br/>
 
 _**_Orders creation and management_**_
 
-| Endpoint                      | HTTP<br/>Method | Result              | Authorization |
-|-------------------------------|-----------------|---------------------|---------------|
-| /orders/customers/order       | POST            | Create an order     | customer      |
-| /orders/customers/order       | GET             | View all orders     | staff         |
-| /orders/details/<int:id_>     | GET             | View their order    | customer      |
-| /orders/approvement/<int:id_> | PUT             | Update order status | staff         |
+| Endpoint                             | HTTP<br/>Method | Result                                                   | Authorization |
+|--------------------------------------|-----------------|----------------------------------------------------------|---------------|
+| /orders/customers/order              | POST            | Create an order                                          | customer      |
+| /orders/customers/order?status="..." | GET             | View all orders with definite status                     | staff         |
+| /orders/details/<int:id_>            | GET             | View their order                                         | customer      |
+| /orders/details/<int:id_>            | PUT             | Change order's items while status is<br/>still "pending" | customer      |
+| /orders/approvement/<int:id_>        | PUT             | Update order status                                      | staff         |
 
 _Endpoints implementation can be found under_: <br/>
  * /resources/orders.py <br/> 
