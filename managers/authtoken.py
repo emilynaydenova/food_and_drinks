@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
 
 from decouple import config
+# Flask-HTTPAuth is a Flask extension that simplifies
+# the use of HTTP authentication with Flask routes.
 from flask_httpauth import HTTPTokenAuth
+
 from jwt import encode, decode
 from werkzeug.exceptions import Unauthorized
 
@@ -10,6 +13,7 @@ from werkzeug.exceptions import Unauthorized
     from models.users import Customer, Admin, Staff
 """
 from models.users import Customer, Admin, Staff
+
 
 class AuthTokenManager:
     @staticmethod
@@ -51,3 +55,25 @@ def verify_token(token):
         return eval(f"{model_}.query.filter_by(id={user_id}).first()")
     except Exception as ex:
         raise Unauthorized("Invalid or missing token. Please log in again.")
+
+
+"""
+https://flask-httpauth.readthedocs.io/en/latest/
+*** HTTPTokenAuth ***
+Authorization: Bearer this-is-my-token
+ verify_token
+ error_handler
+ get_user_roles
+ login_required(role='admin')
+ current_user()
+ 
+*** HTTPBasicAuth ***
+ verify_password
+ get_user_roles
+ get_password
+ hash_password
+ error_handler
+ login_required(role='admin')
+ current_user()
+   
+ """

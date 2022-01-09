@@ -47,11 +47,11 @@ class TestOrders(TestCase):
         data = {
             "status": "pending",
             "delivery": "takeaway",
-            "customer_id": 1,
-            "items": [{"food_and_drinks_id": 1,
+            "customer_id": customer.id,
+            "items": [{"food_and_drinks_id": foods1.id,
                        "quantity": 2
                        },
-                      {"food_and_drinks_id": 2,
+                      {"food_and_drinks_id": foods2.id,
                        "quantity": 3
                        }]
         }
@@ -75,7 +75,7 @@ class TestOrders(TestCase):
             "total_price": 50.25,
             "status": "Pending",
             "delivery": "Takeaway",
-            "customer_id": 1,
+            "customer_id": customer.id,
             "items": [{"food_and_drinks_id": 1,
                        "quantity": 2
                        },
